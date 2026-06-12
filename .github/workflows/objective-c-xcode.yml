@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       THEOS: ${{ github.workspace }}/theos
-      _THEOS_PLATFORM_DPKG: 1 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,11 +28,13 @@ jobs:
             libssl-dev \
             libxml2-dev \
             zip \
-            unzip
+            unzip \
+            bash \
+            curl
       - name: Set up Theos
         run: |
           rm -rf $THEOS
-          git clone --depth 1 https://github.com/theos/theos.git "$THEOS"
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
       - name: Build
         run: |
           make package
