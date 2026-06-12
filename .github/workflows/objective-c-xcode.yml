@@ -1,0 +1,44 @@
+name: build
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      THEOS: ${{ github.workspace }}/theos
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ldid
+        run: |
+          curl -L https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64 -o /usr/local/bin/ldid
+          chmod +x /usr/local/bin/ldid
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            git \
+            make \
+            dpkg-dev \
+            fakeroot \
+            pkg-config \
+            libssl-dev \
+            libxml2-dev \
+            zip \
+            unzip
+      - name: Set up Theos
+        run: |
+          rm -rf $THEOS
+          git clone --depth 1 https://github.com/theos/theos.git "$THEOS"
+          git clone --depth 1 https://github.com/theos/sdks.git "$THEOS/sdks"
+      - name: Build
+        run: |
+          make package
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: debs
+          path: packages/*.deb
