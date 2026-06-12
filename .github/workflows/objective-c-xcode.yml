@@ -33,7 +33,6 @@ jobs:
         run: |
           rm -rf $THEOS
           git clone --depth 1 https://github.com/theos/theos.git "$THEOS"
-          git clone --depth 1 https://github.com/theos/sdks.git "$THEOS/sdks"
       - name: Build
         run: |
           make package
