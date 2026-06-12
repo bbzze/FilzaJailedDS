@@ -32,7 +32,7 @@ jobs:
       - name: Set up Theos
         run: |
           rm -rf $THEOS
-          git clone --depth 1 https://github.com/theos/theos.git "$THEOS"
+          git clone https://github.com/theos/theos.git "$THEOS"
       - name: Build
         run: |
           make package
